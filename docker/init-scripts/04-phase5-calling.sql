@@ -1,0 +1,2 @@
+-- Retired in hard-cutover.
+-- Legacy calling schema changes removed.

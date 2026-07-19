@@ -1,0 +1,41 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="360" viewBox="0 0 980 360" role="img" aria-labelledby="title desc">
+  <title id="title">TellMe device linking model</title>
+  <desc id="desc">A trusted device approves a one-time link. The new device publishes public device keys and prekeys after receiving a signed device certificate.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#684b7a"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#1f2933" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <rect width="980" height="360" rx="18" fill="#faf8fb"/>
+  <text x="42" y="48" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#17212b">Adding a new trusted device</text>
+  <text x="42" y="78" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" fill="#5a6876">A device is added through an existing trusted device, not by silently attaching a new session.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="52" y="138" width="196" height="96" rx="12" fill="#ffffff" stroke="#d5c7df"/>
+    <rect x="284" y="138" width="196" height="96" rx="12" fill="#ffffff" stroke="#d5c7df"/>
+    <rect x="516" y="138" width="196" height="96" rx="12" fill="#ffffff" stroke="#d5c7df"/>
+    <rect x="748" y="138" width="180" height="96" rx="12" fill="#ffffff" stroke="#d5c7df"/>
+  </g>
+
+  <text x="82" y="170" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="700" fill="#17212b">Trusted device</text>
+  <text x="82" y="196" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" fill="#506070">approves request</text>
+
+  <text x="320" y="170" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="700" fill="#17212b">One-time link</text>
+  <text x="320" y="196" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" fill="#506070">ephemeral proof</text>
+
+  <text x="548" y="170" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="700" fill="#17212b">New device</text>
+  <text x="548" y="196" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" fill="#506070">stores local keys</text>
+
+  <text x="784" y="170" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="700" fill="#17212b">Server</text>
+  <text x="784" y="196" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" fill="#506070">public material only</text>
+
+  <path d="M 254 186 L 276 186" stroke="#684b7a" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M 486 186 L 508 186" stroke="#684b7a" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M 718 186 L 740 186" stroke="#684b7a" stroke-width="3" marker-end="url(#arrow)"/>
+
+  <rect x="160" y="270" width="660" height="42" rx="10" fill="#f0eaf4" stroke="#d5c7df"/>
+  <text x="192" y="296" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" fill="#334155">The server sees public device keys and prekeys, not private identity or session keys.</text>
+</svg>

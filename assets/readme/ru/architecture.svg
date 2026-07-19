@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="360" viewBox="0 0 980 360" role="img" aria-labelledby="title desc">
+  <title id="title">TellMe: разделение данных</title>
+  <desc id="desc">Устройства хранят приватные ключи локально. Сервер доставки хранит публичные ключи, prekeys, маршрутизацию и encrypted blobs.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#2f5f73"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#1f2933" flood-opacity="0.14"/>
+    </filter>
+  </defs>
+  <rect width="980" height="360" rx="18" fill="#f7f9fb"/>
+  <text x="42" y="48" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#17212b">Данные разделяются до сервера</text>
+  <text x="42" y="78" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" fill="#5a6876">Сервер маршрутизирует ciphertext. Ключи для чтения остаются на устройствах.</text>
+
+  <g filter="url(#shadow)">
+    <rect x="64" y="128" width="200" height="118" rx="12" fill="#ffffff" stroke="#c8d3dc"/>
+    <rect x="390" y="110" width="200" height="154" rx="12" fill="#ffffff" stroke="#c8d3dc"/>
+    <rect x="716" y="128" width="200" height="118" rx="12" fill="#ffffff" stroke="#c8d3dc"/>
+  </g>
+
+  <text x="94" y="164" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#17212b">Устройство A</text>
+  <text x="94" y="192" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" fill="#506070">приватные ключи</text>
+  <text x="94" y="214" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" fill="#506070">состояние сессии</text>
+
+  <text x="418" y="150" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#17212b">Сервер доставки</text>
+  <text x="418" y="180" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" fill="#506070">routing envelope</text>
+  <text x="418" y="202" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" fill="#506070">публичные ключи</text>
+  <text x="418" y="224" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" fill="#506070">encrypted blobs</text>
+
+  <text x="746" y="164" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="18" font-weight="700" fill="#17212b">Устройство B</text>
+  <text x="746" y="192" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" fill="#506070">приватные ключи</text>
+  <text x="746" y="214" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" fill="#506070">расшифровка</text>
+
+  <path d="M 270 176 C 310 176 340 176 382 176" fill="none" stroke="#2f5f73" stroke-width="3" marker-end="url(#arrow)"/>
+  <path d="M 598 176 C 638 176 668 176 708 176" fill="none" stroke="#2f5f73" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="288" y="158" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" fill="#2f5f73">ciphertext</text>
+  <text x="632" y="158" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" fill="#2f5f73">ciphertext</text>
+
+  <rect x="92" y="282" width="796" height="42" rx="10" fill="#e9f1f5" stroke="#c8d3dc"/>
+  <text x="124" y="308" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" fill="#334155">Читаемое содержимое существует на устройствах. Сервер хранит доставку, а не plaintext.</text>
+</svg>

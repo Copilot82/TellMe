@@ -1,0 +1,12 @@
+title = "TellMe secret scanning policy"
+
+[extend]
+useDefault = true
+
+[[allowlists]]
+description = "Documented synthetic signed-prekey fixture used by deterministic UI tests"
+targetRules = ["generic-api-key"]
+condition = "AND"
+regexTarget = "line"
+paths = ['''(^|/)messenger/messenger/Core/Testing/AppLaunchConfiguration\.swift$''']
+regexes = ['''signedPrekeyPub:\s*"signed-prekey-pub-[0-9]+"''']

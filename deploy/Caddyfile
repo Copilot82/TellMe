@@ -1,0 +1,24 @@
+{
+	servers {
+		protocols h1 h2
+	}
+}
+
+{$SERVER_DOMAIN} {
+	encode zstd gzip
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		-Server
+	}
+
+	reverse_proxy server:3100 {
+		transport http {
+			dial_timeout 5s
+			response_header_timeout 60s
+		}
+	}
+}

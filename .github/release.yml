@@ -1,0 +1,19 @@
+changelog:
+  categories:
+    - title: Критические изменения
+      labels: [breaking-change]
+    - title: Новые возможности
+      labels: [enhancement, feature]
+    - title: Исправления
+      labels: [bug, fix]
+    - title: Безопасность
+      labels: [security]
+    - title: Документация
+      labels: [documentation]
+    - title: Зависимости
+      labels: [dependencies]
+    - title: Прочие изменения
+      labels: ["*"]
+  exclude:
+    labels: [skip-changelog]
+    authors: [dependabot]

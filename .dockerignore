@@ -1,0 +1,28 @@
+.git
+.gitignore
+.env
+.env.*
+node_modules
+dist
+coverage
+uploads
+certs/
+tmp/
+output/
+
+# iOS client and local test artifacts are not needed in backend image
+messenger/
+
+# Large local runtime artifacts
+.e2e-artifacts/
+.e2e-headless/
+.e2e-user-scenarios/
+certbot/
+backend-rust/target/
+messenger/HeadlessE2E/.build/
+
+# Misc local docs/reports
+*.md
+
+# OS/editor noise
+.DS_Store

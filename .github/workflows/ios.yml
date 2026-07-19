@@ -1,0 +1,65 @@
+name: iOS
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "messenger/**"
+      - ".github/workflows/ios.yml"
+  pull_request:
+    paths:
+      - "messenger/**"
+      - ".github/workflows/ios.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ios-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  tests:
+    name: Модульные тесты
+    runs-on: macos-26
+    timeout-minutes: 45
+    steps:
+      - name: Получить исходный код
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Показать версии инструментов
+        run: |
+          xcodebuild -version
+          swift --version
+
+      - name: Запустить тесты приложения
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project messenger/messenger.xcodeproj \
+            -scheme messenger \
+            -testPlan ProductionCalls \
+            -only-testing:messengerTests \
+            -destination 'platform=iOS Simulator,name=iPhone 17,OS=26.2' \
+            -resultBundlePath "$RUNNER_TEMP/TellMeTests.xcresult"
+
+      - name: Сохранить отчёт при ошибке
+        if: failure()
+        uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: ios-test-results
+          path: ${{ runner.temp }}/TellMeTests.xcresult
+          if-no-files-found: ignore
+          retention-days: 7
+
+  headless-e2e:
+    name: Headless E2E
+    runs-on: macos-26
+    timeout-minutes: 20
+    steps:
+      - name: Получить исходный код
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Проверить пакет сценариев
+        run: swift test --package-path messenger/HeadlessE2E

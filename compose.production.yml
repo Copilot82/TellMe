@@ -1,0 +1,144 @@
+name: tellme
+
+services:
+  postgres:
+    image: postgres:16-alpine@sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:?POSTGRES_DB is required}
+      POSTGRES_USER: ${POSTGRES_USER:?POSTGRES_USER is required}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U \"$${POSTGRES_USER}\" -d \"$${POSTGRES_DB}\""]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    restart: unless-stopped
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks: [backend]
+
+  redis:
+    image: redis:7-alpine@sha256:6ab0b6e7381779332f97b8ca76193e45b0756f38d4c0dcda72dbb3c32061ab99
+    command: ["redis-server", "--appendonly", "yes", "--requirepass", "${REDIS_PASSWORD:?REDIS_PASSWORD is required}"]
+    healthcheck:
+      test: ["CMD-SHELL", "redis-cli -a \"$${REDIS_PASSWORD}\" --no-auth-warning ping | grep -q PONG"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    environment:
+      REDIS_PASSWORD: ${REDIS_PASSWORD:?REDIS_PASSWORD is required}
+    restart: unless-stopped
+    volumes:
+      - redis_data:/data
+    networks: [backend]
+
+  minio:
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: ${MINIO_ACCESS_KEY:?MINIO_ACCESS_KEY is required}
+      MINIO_ROOT_PASSWORD: ${MINIO_SECRET_KEY:?MINIO_SECRET_KEY is required}
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://127.0.0.1:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+    restart: unless-stopped
+    volumes:
+      - minio_data:/data
+    networks: [backend]
+
+  server:
+    build:
+      context: .
+      dockerfile: backend-rust/Dockerfile
+    env_file:
+      - .env.production
+    environment:
+      DATABASE_URL: postgresql://${POSTGRES_USER:?POSTGRES_USER is required}:${POSTGRES_PASSWORD:?POSTGRES_PASSWORD is required}@postgres:5432/${POSTGRES_DB:?POSTGRES_DB is required}
+      REDIS_URL: redis://:${REDIS_PASSWORD:?REDIS_PASSWORD is required}@redis:6379
+      MINIO_ENDPOINT: minio
+      MINIO_PORT: 9000
+      MINIO_USE_SSL: "false"
+      APNS_PRIVATE_KEY_PATH: ${APNS_PRIVATE_KEY_PATH:-/run/secrets/tellme/AuthKey.p8}
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3100/health >/dev/null 2>&1"]
+      interval: 10s
+      timeout: 5s
+      retries: 20
+      start_period: 20s
+    restart: unless-stopped
+    volumes:
+      - ./secrets/apns:/run/secrets/tellme:ro
+    networks: [backend]
+
+  caddy:
+    image: caddy:2.11.4-alpine@sha256:5f5c8640aae01df9654968d946d8f1a56c497f1dd5c5cda4cf95ab7c14d58648
+    ports:
+      - "${HTTP_PORT:-80}:80"
+      - "${HTTPS_PORT:-443}:443"
+    environment:
+      SERVER_DOMAIN: ${SERVER_DOMAIN:?SERVER_DOMAIN is required}
+    volumes:
+      - ./deploy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy_data:/data
+      - caddy_config:/config
+    depends_on:
+      server:
+        condition: service_healthy
+    restart: unless-stopped
+    networks: [backend]
+
+  coturn:
+    image: coturn/coturn:4.12.0-alpine@sha256:faca4aa57efc436916c31546f3867bd1a3fb1077723291bcfba0bf814bcaf48a
+    network_mode: host
+    command:
+      - --log-file=stdout
+      - --external-ip=${TURN_EXTERNAL_IP:?TURN_EXTERNAL_IP is required}/${TURN_PRIVATE_IP:?TURN_PRIVATE_IP is required}
+      - --listening-ip=${TURN_PRIVATE_IP:?TURN_PRIVATE_IP is required}
+      - --relay-ip=${TURN_PRIVATE_IP:?TURN_PRIVATE_IP is required}
+      - --listening-port=${TURN_LISTENING_PORT:-3478}
+      - --tls-listening-port=${TURN_TLS_PORT:-5349}
+      - --min-port=${TURN_MIN_PORT:-49152}
+      - --max-port=${TURN_MAX_PORT:-65535}
+      - --realm=${SERVER_DOMAIN:?SERVER_DOMAIN is required}
+      - --use-auth-secret
+      - --static-auth-secret=${TURN_STATIC_SECRET:?TURN_STATIC_SECRET is required}
+      - --no-multicast-peers
+      - --denied-peer-ip=10.0.0.0-10.255.255.255
+      - --denied-peer-ip=172.16.0.0-172.31.255.255
+      - --denied-peer-ip=192.168.0.0-192.168.255.255
+      - --denied-peer-ip=127.0.0.0-127.255.255.255
+      - --denied-peer-ip=169.254.0.0-169.254.255.255
+    environment:
+      TURN_EXTERNAL_IP: ${TURN_EXTERNAL_IP:?TURN_EXTERNAL_IP is required}
+      TURN_PRIVATE_IP: ${TURN_PRIVATE_IP:?TURN_PRIVATE_IP is required}
+      TURN_LISTENING_PORT: ${TURN_LISTENING_PORT:-3478}
+      TURN_STATIC_SECRET: ${TURN_STATIC_SECRET:?TURN_STATIC_SECRET is required}
+    healthcheck:
+      test: ["CMD-SHELL", "turnutils_stunclient -p \"$${TURN_LISTENING_PORT:-3478}\" \"$${TURN_PRIVATE_IP}\" >/dev/null 2>&1"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 10s
+    tmpfs:
+      - /var/lib/coturn
+    restart: unless-stopped
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  postgres_data:
+  redis_data:
+  minio_data:
+  caddy_data:
+  caddy_config:

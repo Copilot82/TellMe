@@ -1,0 +1,73 @@
+name: tellme-dev
+
+services:
+  postgres:
+    image: postgres:16-alpine@sha256:57c72fd2a128e416c7fcc499958864df5301e940bca0a56f58fddf30ffc07777
+    environment:
+      POSTGRES_DB: tellme
+      POSTGRES_USER: tellme
+      POSTGRES_PASSWORD: tellme-dev-password
+    ports:
+      - "${TELLME_POSTGRES_PORT:-5432}:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U tellme -d tellme"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - tellme_postgres:/var/lib/postgresql/data
+
+  redis:
+    image: redis:7-alpine@sha256:6ab0b6e7381779332f97b8ca76193e45b0756f38d4c0dcda72dbb3c32061ab99
+    ports:
+      - "${TELLME_REDIS_PORT:-6379}:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    volumes:
+      - tellme_redis:/data
+
+  minio:
+    image: minio/minio:RELEASE.2025-09-07T16-13-09Z@sha256:14cea493d9a34af32f524e538b8346cf79f3321eff8e708c1e2960462bd8936e
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: tellme-local
+      MINIO_ROOT_PASSWORD: tellme-local-password
+    ports:
+      - "${TELLME_MINIO_PORT:-9000}:9000"
+      - "${TELLME_MINIO_CONSOLE_PORT:-9001}:9001"
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - tellme_minio:/data
+
+  server:
+    build:
+      context: .
+      dockerfile: backend-rust/Dockerfile
+    env_file:
+      - .env
+    ports:
+      - "${TELLME_HTTP_PORT:-3100}:3100"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- http://127.0.0.1:3100/health >/dev/null 2>&1"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+volumes:
+  tellme_postgres:
+  tellme_redis:
+  tellme_minio:

@@ -1,0 +1,42 @@
+{
+  "configurations" : [
+    {
+      "id" : "F8F3A245-5DD3-4A29-A834-6D73612E629A",
+      "name" : "Call Critical",
+      "options" : {
+        "testExecutionOrdering" : "lexical"
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "codeCoverage" : true,
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:messenger.xcodeproj",
+      "identifier" : "05C101292F4A5D8900A1D0E5",
+      "name" : "messenger"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : false,
+      "target" : {
+        "containerPath" : "container:messenger.xcodeproj",
+        "identifier" : "05C101422F4A5D8A00A1D0E5",
+        "name" : "messengerTests"
+      }
+    },
+    {
+      "parallelizable" : false,
+      "selectedTests" : [
+        "MessengerScreenSmokeUITests/testActiveCallScreenSmoke()",
+        "MessengerScreenSmokeUITests/testNotificationsMissedCallPushSimulationUpdatesStatus()"
+      ],
+      "target" : {
+        "containerPath" : "container:messenger.xcodeproj",
+        "identifier" : "05C1014C2F4A5D8A00A1D0E5",
+        "name" : "messengerUITests"
+      }
+    }
+  ],
+  "version" : 1
+}

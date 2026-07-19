@@ -1,0 +1,2 @@
+-- Retired in hard-cutover.
+-- Legacy schema creation removed. Federated schema starts from 07-phase8-federated-e2e.sql.

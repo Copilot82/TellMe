@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="980" height="430" viewBox="0 0 980 430" role="img" aria-labelledby="title desc">
+  <title id="title">TellMe: поток E2E-сообщения</title>
+  <desc id="desc">Отправитель получает prekeys получателя, создает X3DH и Double Ratchet сессию, отправляет ciphertext для устройства, а получатель расшифровывает локально.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#365f45"/>
+    </marker>
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="130%">
+      <feDropShadow dx="0" dy="3" stdDeviation="5" flood-color="#1f2933" flood-opacity="0.12"/>
+    </filter>
+  </defs>
+  <rect width="980" height="430" rx="18" fill="#f8faf7"/>
+  <text x="42" y="48" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="22" font-weight="700" fill="#17212b">Поток E2E-сообщения</text>
+  <text x="42" y="78" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="14" fill="#5a6876">Шифрование начинается на устройстве отправителя и заканчивается на устройстве получателя.</text>
+
+  <line x1="180" y1="120" x2="180" y2="368" stroke="#c7d5c9" stroke-width="2"/>
+  <line x1="490" y1="120" x2="490" y2="368" stroke="#c7d5c9" stroke-width="2"/>
+  <line x1="800" y1="120" x2="800" y2="368" stroke="#c7d5c9" stroke-width="2"/>
+
+  <g filter="url(#shadow)">
+    <rect x="88" y="102" width="184" height="44" rx="10" fill="#ffffff" stroke="#c7d5c9"/>
+    <rect x="398" y="102" width="184" height="44" rx="10" fill="#ffffff" stroke="#c7d5c9"/>
+    <rect x="708" y="102" width="184" height="44" rx="10" fill="#ffffff" stroke="#c7d5c9"/>
+  </g>
+  <text x="114" y="130" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="700" fill="#17212b">Устройство Alice</text>
+  <text x="432" y="130" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="700" fill="#17212b">Сервер</text>
+  <text x="736" y="130" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="16" font-weight="700" fill="#17212b">Устройство Bob</text>
+
+  <path d="M 188 178 L 482 178" stroke="#365f45" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="238" y="166" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" fill="#365f45">запрос prekeys устройства Bob</text>
+
+  <path d="M 482 220 L 188 220" stroke="#365f45" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="276" y="208" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" fill="#365f45">публичный prekey bundle</text>
+
+  <rect x="70" y="246" width="220" height="54" rx="10" fill="#edf6ee" stroke="#b8cbbd"/>
+  <text x="96" y="268" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" font-weight="700" fill="#17212b">Локальная криптография</text>
+  <text x="96" y="288" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" fill="#506070">X3DH + Double Ratchet</text>
+
+  <path d="M 188 324 L 482 324" stroke="#365f45" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="242" y="312" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" fill="#365f45">ciphertext для устройства</text>
+
+  <path d="M 498 324 L 792 324" stroke="#365f45" stroke-width="3" marker-end="url(#arrow)"/>
+  <text x="586" y="312" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" fill="#365f45">encrypted mailbox blob</text>
+
+  <rect x="690" y="348" width="220" height="40" rx="10" fill="#edf6ee" stroke="#b8cbbd"/>
+  <text x="724" y="373" font-family="Inter, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif" font-size="13" fill="#506070">локальная расшифровка</text>
+</svg>

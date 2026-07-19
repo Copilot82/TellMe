@@ -1,0 +1,44 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: "17 4 * * 1"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  security-events: write
+
+concurrency:
+  group: codeql-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  swift:
+    name: Анализ Swift
+    runs-on: macos-26
+    timeout-minutes: 60
+    steps:
+      - name: Получить исходный код
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Инициализировать CodeQL
+        uses: github/codeql-action/init@7188fc363630916deb702c7fdcf4e481b751f97a # v4
+        with:
+          languages: swift
+          build-mode: manual
+
+      - name: Собрать приложение для анализа
+        run: |
+          xcodebuild build \
+            -project messenger/messenger.xcodeproj \
+            -scheme messenger \
+            -destination 'generic/platform=iOS Simulator' \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Выполнить анализ
+        uses: github/codeql-action/analyze@7188fc363630916deb702c7fdcf4e481b751f97a # v4

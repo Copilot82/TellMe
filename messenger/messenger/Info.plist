@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>TellMeAPIBaseURL</key>
+	<string>$(TELLME_API_BASE_URL)</string>
+	<key>TellMeAPIBackupCertSHA256</key>
+	<string>$(TELLME_API_BACKUP_CERT_SHA256)</string>
+	<key>TellMeAPIPinHost</key>
+	<string>$(TELLME_API_PIN_HOST)</string>
+	<key>TellMeAPIPrimaryCertSHA256</key>
+	<string>$(TELLME_API_PRIMARY_CERT_SHA256)</string>
+	<key>TellMeSTUNURL</key>
+	<string>$(TELLME_STUN_URL)</string>
+	<key>TellMeTURNURL</key>
+	<string>$(TELLME_TURN_URL)</string>
+	<key>TellMeWebSocketBaseURL</key>
+	<string>$(TELLME_WS_BASE_URL)</string>
+	<key>CFBundleDisplayName</key>
+	<string>Tele Drun</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera access is required for video calls.</string>
+	<key>NSFaceIDUsageDescription</key>
+	<string>Face ID is used to protect access to your messenger account.</string>
+	<key>NSLocalNetworkUsageDescription</key>
+	<string>Local network access is used for realtime connectivity checks.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Microphone access is required for voice and video calls.</string>
+	<key>NSPhotoLibraryAddUsageDescription</key>
+	<string>Photo library access is required to save received media.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Photo library access is required to send media attachments.</string>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsLocalNetworking</key>
+		<true/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>localhost</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+				<key>NSIncludesSubdomains</key>
+				<true/>
+			</dict>
+			<key>198.18.0.1</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>audio</string>
+		<string>voip</string>
+		<string>remote-notification</string>
+	</array>
+	<key>UIApplicationSceneManifest</key>
+	<dict>
+		<key>UIApplicationSupportsMultipleScenes</key>
+		<true/>
+		<key>UISceneConfigurations</key>
+		<dict>
+			<key>UIWindowSceneSessionRoleApplication</key>
+			<array>
+				<dict>
+					<key>UISceneConfigurationName</key>
+					<string>Default Configuration</string>
+					<key>UISceneDelegateClassName</key>
+					<string>$(PRODUCT_MODULE_NAME).SceneDelegate</string>
+				</dict>
+			</array>
+		</dict>
+	</dict>
+</dict>
+</plist>

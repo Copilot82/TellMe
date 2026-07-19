@@ -1,0 +1,110 @@
+name: Rust
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "backend-rust/**"
+      - "docker/init-scripts/**"
+      - "Cargo.lock"
+      - "rust-toolchain.toml"
+      - ".github/workflows/rust.yml"
+  pull_request:
+    paths:
+      - "backend-rust/**"
+      - "docker/init-scripts/**"
+      - "Cargo.lock"
+      - "rust-toolchain.toml"
+      - ".github/workflows/rust.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rust-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    working-directory: backend-rust
+
+jobs:
+  quality:
+    name: Форматирование, Clippy и тесты
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Получить исходный код
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Установить Rust
+        run: rustup show
+
+      - name: Кэшировать Cargo
+        uses: actions/cache@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            backend-rust/target
+          key: ${{ runner.os }}-cargo-${{ hashFiles('backend-rust/Cargo.lock', 'rust-toolchain.toml') }}
+          restore-keys: ${{ runner.os }}-cargo-
+
+      - name: Проверить форматирование
+        run: cargo fmt --all -- --check
+
+      - name: Запустить Clippy
+        run: cargo clippy --workspace --all-targets --all-features -- -D warnings
+
+      - name: Запустить тесты
+        run: cargo test --workspace --all-features --locked
+
+  dependencies:
+    name: Зависимости и лицензии
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Получить исходный код
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Установить инструменты аудита
+        run: |
+          cargo install --locked cargo-audit --version 0.22.1
+          cargo install --locked cargo-deny --version 0.19.8
+
+      - name: Проверить известные уязвимости
+        run: cargo audit --deny warnings
+
+      - name: Проверить лицензии и источники зависимостей
+        run: cargo deny --all-features check
+
+  compose-smoke:
+    name: Локальный Compose smoke
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    defaults:
+      run:
+        working-directory: .
+    steps:
+      - name: Получить исходный код
+        uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
+
+      - name: Подготовить локальную конфигурацию
+        run: |
+          cp .env.example .env
+          docker compose -f compose.dev.yml config --quiet
+
+      - name: Запустить чистый контур
+        run: docker compose -f compose.dev.yml up --detach --build --wait --wait-timeout 180
+
+      - name: Проверить публичные probes
+        run: |
+          curl --fail --show-error http://localhost:3100/health
+          curl --fail --show-error http://localhost:3100/api/config
+
+      - name: Показать журналы при ошибке
+        if: failure()
+        run: docker compose -f compose.dev.yml logs --no-color
+
+      - name: Удалить тестовые volumes
+        if: always()
+        run: docker compose -f compose.dev.yml down --volumes
