@@ -16,5 +16,5 @@ description = "Public RFC 6455 WebSocket handshake nonce used in deployment prob
 targetRules = ["generic-api-key"]
 condition = "AND"
 regexTarget = "line"
-paths = ['''(^|/)docs/deployment(-verification)?\.md$''']
+paths = ['''(^|/)docs/deployment(-verification)?(\.en)?\.md$''']
 regexes = ['''Sec-WebSocket-Key:\s*dGhlIHNhbXBsZSBub25jZQ==''']

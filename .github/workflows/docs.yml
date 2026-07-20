@@ -6,16 +6,28 @@ on:
     paths:
       - "docs/**"
       - "README.md"
+      - "README.en.md"
+      - "SECURITY.md"
+      - "SECURITY.en.md"
+      - "CHANGELOG.md"
+      - "CHANGELOG.en.md"
       - "mkdocs.yml"
       - "requirements-docs.txt"
+      - "tools/check_docs_i18n.py"
       - "tools/check_markdown_links.py"
       - ".github/workflows/docs.yml"
   pull_request:
     paths:
       - "docs/**"
       - "README.md"
+      - "README.en.md"
+      - "SECURITY.md"
+      - "SECURITY.en.md"
+      - "CHANGELOG.md"
+      - "CHANGELOG.en.md"
       - "mkdocs.yml"
       - "requirements-docs.txt"
+      - "tools/check_docs_i18n.py"
       - "tools/check_markdown_links.py"
       - ".github/workflows/docs.yml"
   workflow_dispatch:
@@ -29,36 +41,39 @@ concurrency:
 
 jobs:
   build:
-    name: Сборка и проверка ссылок
+    name: Build and validate
     runs-on: ubuntu-24.04
     steps:
-      - name: Получить исходный код
+      - name: Check out source
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
 
-      - name: Установить Python
+      - name: Set up Python
         uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6.3.0
         with:
           python-version: "3.13"
           cache: pip
           cache-dependency-path: requirements-docs.txt
 
-      - name: Установить зависимости документации
+      - name: Install documentation dependencies
         run: pip install -r requirements-docs.txt
 
-      - name: Проверить локальные ссылки
+      - name: Validate translation parity
+        run: python3 tools/check_docs_i18n.py
+
+      - name: Validate local links
         run: python3 tools/check_markdown_links.py
 
-      - name: Собрать сайт в строгом режиме
+      - name: Build the site in strict mode
         run: mkdocs build --strict --site-dir site
 
-      - name: Сохранить сайт
+      - name: Upload the site artifact
         if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
         uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5.0.0
         with:
           path: site
 
   deploy:
-    name: Публикация GitHub Pages
+    name: Publish GitHub Pages
     if: github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'workflow_dispatch')
     needs: build
     runs-on: ubuntu-24.04
@@ -69,9 +84,9 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Настроить Pages
+      - name: Configure Pages
         uses: actions/configure-pages@45bfe0192ca1faeb007ade9deae92b16b8254a0d # v6.0.0
 
-      - name: Опубликовать сайт
+      - name: Deploy the site
         id: deployment
         uses: actions/deploy-pages@cd2ce8fcbc39b97be8ca5fce6e763baed58fa128 # v5.0.0

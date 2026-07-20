@@ -58,6 +58,65 @@ plugins:
       lang:
         - ru
         - en
+  - i18n:
+      docs_structure: suffix
+      fallback_to_default: false
+      reconfigure_material: true
+      reconfigure_search: true
+      languages:
+        - locale: ru
+          default: true
+          name: Русский
+          build: true
+        - locale: en
+          name: English
+          build: true
+          site_name: TellMe — technical documentation
+          site_description: Architecture, protocol, operations, and testing of the TellMe secure messenger
+          theme:
+            language: en
+            palette:
+              - media: "(prefers-color-scheme: light)"
+                scheme: default
+                primary: indigo
+                accent: blue
+                toggle:
+                  icon: material/brightness-7
+                  name: Switch to dark mode
+              - media: "(prefers-color-scheme: dark)"
+                scheme: slate
+                primary: indigo
+                accent: light-blue
+                toggle:
+                  icon: material/brightness-4
+                  name: Switch to light mode
+          nav_translations:
+            Обзор: Overview
+            Внедрение: Deployment
+            Требования: Requirements
+            Развёртывание: Production deployment
+            Apple Developer и iOS: Apple Developer and iOS
+            Проверка установки: Installation verification
+            Backup и restore: Backup and restore
+            Диагностика: Troubleshooting
+            Архитектура: Architecture
+            Модель угроз: Threat model
+            Криптографический протокол: Cryptographic protocol
+            Контракт API: API contract
+            Разработка: Development
+            Локальный запуск: Local development
+            Стратегия тестирования: Testing strategy
+            Стиль кода: Code style
+            Эксплуатация: Operations
+            Архитектурные решения: Architecture decisions
+            Реестр ADR: ADR index
+            "ADR-0001: сервер не имеет доступа к содержимому": "ADR-0001: server-blind storage"
+            "ADR-0002: шифрование на устройство": "ADR-0002: per-device encryption"
+            "ADR-0003: сервер на Rust": "ADR-0003: Rust backend"
+            "ADR-0004: realtime не является источником истины": "ADR-0004: realtime is not the source of truth"
+            Инженерные разборы: Engineering case studies
+            Стабилизация Picture in Picture: Picture in Picture stabilization
+            Настройка GitHub: GitHub configuration
 
 nav:
   - Обзор: README.md

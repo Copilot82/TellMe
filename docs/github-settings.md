@@ -28,8 +28,8 @@ contribution в README.
 ## 3. GitHub Pages
 
 В **Settings → Pages → Build and deployment** выбран источник **GitHub Actions**. Workflow
-`Documentation` выполняет strict build и проверку ссылок; публикация разрешена только для основной
-ветки.
+`Documentation` выполняет strict build, проверку локальных ссылок и structural parity русской и
+английской версий; публикация разрешена только для основной ветки.
 
 После изменения документации проверяются:
 
@@ -37,7 +37,7 @@ contribution в README.
 - Mermaid-схемы на desktop и mobile viewport;
 - внешние ссылки Apple, Docker, Caddy и TestFlight;
 - отсутствие элементов интерфейса, предлагающих редактирование через pull request;
-- корректность русскоязычного поиска.
+- корректность русского и английского поиска и language switcher.
 
 ## 4. Защита основной ветки
 
@@ -56,7 +56,7 @@ Ruleset основной ветки должен обеспечивать:
 - local Compose smoke;
 - iOS unit tests;
 - headless E2E;
-- documentation strict build и link check;
+- documentation strict build, link check и translation parity;
 - Swift CodeQL;
 - Gitleaks history scan.
 

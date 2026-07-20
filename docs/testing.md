@@ -118,7 +118,8 @@ Release candidate считается проверенным, если:
 
 1. Rust fmt/clippy/test/audit/deny успешны;
 2. iOS unit suite успешен на закреплённой Xcode/iOS runtime;
-3. docs site собирается в strict mode;
+3. docs site собирается в strict mode, локальные ссылки доступны, а русская и английская
+   структуры синхронизированы;
 4. secret scan не находит credential в reachable history;
 5. local Compose стартует с чистыми volumes;
 6. затронутые physical scenarios имеют свежий evidence;
