@@ -24,6 +24,9 @@ jobs:
     name: Модульные тесты
     runs-on: macos-26
     timeout-minutes: 45
+    env:
+      # Версия Xcode должна соответствовать simulator runtime в destination ниже.
+      DEVELOPER_DIR: /Applications/Xcode_26.2.app/Contents/Developer
     steps:
       - name: Получить исходный код
         uses: actions/checkout@9c091bb21b7c1c1d1991bb908d89e4e9dddfe3e0 # v7.0.0
