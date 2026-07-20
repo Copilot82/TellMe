@@ -21,7 +21,7 @@ reqwest = { version = "0.12.24", default-features = false, features = ["http2", 
 redis = { version = "1.2.2", default-features = false, features = ["tokio-comp"] }
 serde = { version = "1.0.228", features = ["derive"] }
 serde_json = "1.0.150"
-sha1 = "0.10.6"
+sha1 = "0.11.0"
 sha2 = "0.10.9"
 sqlx = { version = "0.8.6", default-features = false, features = ["postgres", "runtime-tokio"] }
 time = { version = "0.3.47", features = ["formatting", "parsing"] }
