@@ -1,110 +1,102 @@
-# Публикация и архивирование репозитория GitHub
+# Настройка репозитория GitHub
 
-## 1. Политика
+## 1. Политика публикации
 
-Репозиторий публикуется как read-only инженерный snapshot. Проект не сопровождается, внешние pull
-request и issues не рассматриваются. GitHub используется для хранения исходного кода, CI evidence,
-release artifact, security analysis и технической документации.
+GitHub используется для публикации исходного кода, release artifacts, результатов CI, security
+analysis и технической документации. Репозиторий не является публичной площадкой совместной
+разработки: внешние pull request, issues и запросы на внедрение не рассматриваются.
 
-До первой публикации владелец лично проверяет diff, commit metadata и отсутствие secrets. Push не
-выполняется автоматизированным процессом без отдельного явного одобрения.
+Публичный roadmap, release cadence и сроки обработки обращений не заявлены.
 
-## 2. Порядок первой публикации
+Перед публикацией владелец проверяет diff, commit metadata и отсутствие secrets. Автоматизированный
+push выполняется только после отдельного явного одобрения владельца.
 
-1. Создать публичный repository без автоматически добавленных README/License.
-2. Отправить подготовленную основную ветку только после ручного approval.
-3. Дождаться успешного выполнения всех GitHub Actions.
-4. Включить GitHub Pages и проверить опубликованные страницы на desktop/mobile.
-5. Создать release `v2.0.0` из проверенного commit.
-6. Проверить CodeQL, dependency graph и secret scanning.
-7. Отключить community-функции.
-8. После фиксации Pages/release перевести repository в archived state.
+## 2. Общие свойства
 
-Архивирование делает repository read-only и наиболее точно отражает отсутствие сопровождения.
-Если сначала требуется повторный CI run или исправление метаданных, архивирование выполняется после
-этих операций.
-
-## 3. Общие свойства
-
-В **Settings → General** до архивирования:
+В **Settings → General** используются следующие значения:
 
 - Description: `Self-hosted E2E iOS messenger with a Rust backend`;
 - Website: `https://copilot82.github.io/TellMe/`;
 - Topics: `ios`, `swift`, `rust`, `self-hosted`, `e2ee`, `axum`, `webrtc`, `cryptography`;
-- отключить **Issues**, **Discussions**, **Projects** и **Wikis**;
-- оставить Releases и Packages только если они действительно используются;
-- не добавлять funding links и внешние support channels.
+- **Issues**, **Discussions**, **Projects** и **Wikis** отключены;
+- funding links и внешние support channels не публикуются;
+- Releases используются для фиксации проверенных версий исходного кода.
 
-README и `SECURITY.md` должны явно сообщать, что maintenance и response SLA отсутствуют.
+Отключение community-функций фиксирует модель доступа и не заменяется формальным приглашением к
+contribution в README.
 
-## 4. GitHub Pages
+## 3. GitHub Pages
 
-В **Settings → Pages → Build and deployment** выбрать **GitHub Actions**. Workflow
-`Documentation` выполняет strict build и link check, а публикацию запускает только основная ветка.
+В **Settings → Pages → Build and deployment** выбран источник **GitHub Actions**. Workflow
+`Documentation` выполняет strict build и проверку ссылок; публикация разрешена только для основной
+ветки.
 
-Перед архивированием проверить:
+После изменения документации проверяются:
 
-- главную страницу и navigation;
-- Mermaid-схему на desktop и mobile viewport;
-- внешние ссылки Apple/Docker/Caddy;
-- отсутствие кнопки редактирования, подразумевающей приём PR;
+- главная страница и navigation;
+- Mermaid-схемы на desktop и mobile viewport;
+- внешние ссылки Apple, Docker, Caddy и TestFlight;
+- отсутствие элементов интерфейса, предлагающих редактирование через pull request;
 - корректность русскоязычного поиска.
 
-## 5. Branch ruleset до архивирования
+## 4. Защита основной ветки
 
-Для основной ветки на период подготовки рекомендуется ruleset:
+Ruleset основной ветки должен обеспечивать:
 
 - запрет force push и удаления;
-- обязательные status checks;
 - linear history;
-- ограничение push владельцем репозитория;
+- выполнение обязательных status checks;
+- ограничение прямой записи владельцем репозитория;
 - signed commits, если используется стабильная signing-конфигурация.
 
 Обязательные checks:
 
-- Rust formatting/Clippy/tests;
-- dependency and license policy;
+- Rust formatting, Clippy и tests;
+- dependency и license policy;
 - local Compose smoke;
 - iOS unit tests;
 - headless E2E;
-- documentation strict build/link check;
+- documentation strict build и link check;
 - Swift CodeQL;
 - Gitleaks history scan.
 
-Требование pull request не нужно, если repository не принимает внешние изменения и сразу
-архивируется. Ruleset служит защитой подготовительного этапа, а не обещанием review workflow.
+Требование pull request не включается. Отсутствие публичного review workflow является намеренным
+ограничением модели репозитория.
 
-## 6. Security features
+## 5. Security features
 
-До архивирования включить доступные функции:
+Для repository включены:
 
-- dependency graph;
-- Dependabot alerts;
+- dependency graph и Dependabot alerts;
 - secret scanning и push protection;
-- private vulnerability reporting, если владелец готов принимать приватные сообщения без SLA;
-- workflow `CodeQL`; GitHub default setup одновременно не включать, чтобы не дублировать анализ.
+- private vulnerability reporting без заявленного response SLA;
+- workflow `CodeQL` без параллельного GitHub default setup;
+- Gitleaks для проверки публикуемой истории.
 
-Результаты security tools относятся к проверенному snapshot и не означают постоянный мониторинг или
-независимый криптографический аудит.
+Результаты автоматических инструментов относятся к конкретному commit. Они не заменяют независимый
+аудит протокола, iOS-клиента и production-инфраструктуры.
 
-## 7. Release
+Code scanning alert закрывается как false positive только после статического разбора source,
+sink, trust boundary и фактического контракта данных. Причина фиксируется в комментарии alert.
 
-Release `v2.0.0` должен содержать:
+## 6. Release
 
-- назначение как corporate self-hosted source base;
-- commit hash;
+Release `v2.0.0` содержит:
+
+- назначение проекта как corporate self-hosted source base;
+- полный commit hash;
 - перечень выполненных CI/release gates;
 - ссылку на deployment guide;
-- TestFlight public link и отметку о возможной недоступности до review;
-- ограничения: отсутствие security audit, group messaging и дальнейшей поддержки;
-- license.
+- TestFlight public link с указанием возможной недоступности до Apple review;
+- ограничения: отсутствие независимого security audit и group messaging;
+- сведения о лицензии.
 
-Не прикладывайте `.env`, APNs key, provisioning profiles, signing certificates, device logs,
-xcresult с персональными данными или production backup.
+В release assets не включаются `.env`, APNs keys, provisioning profiles, signing certificates,
+device logs, `xcresult` с персональными данными и production backups.
 
-## 8. Проверка приватности перед push
+## 7. Проверка приватности перед push
 
-Минимальный pre-push audit:
+Минимальная проверка:
 
 ```bash
 git status --short
@@ -115,15 +107,19 @@ gitleaks git --redact --no-banner
 ```
 
 Последняя команда проверяет историю, а не только рабочее дерево. Если commit metadata содержит
-персональное имя/email, одной правки README недостаточно: публикуемая история должна быть создана
-с нейтральной project identity либо переписана до первого push.
+персональное имя или email, одной правки README недостаточно: публикуемая история создаётся с
+нейтральной project identity либо переписывается до push.
 
-## 9. Архивирование
+## 8. Контроль изменения настроек
 
-После финальной ручной проверки откройте **Settings → General → Danger Zone → Archive this
-repository**. Убедитесь, что release и Pages доступны без авторизации, а README сразу объясняет
-read-only статус.
+После изменения repository settings через UI или API проверяются:
 
-Для критического исправления владелец может временно снять archive, внести проверенное изменение,
-повторить CI и снова архивировать repository. Это исключительная операция и не означает
-возобновление публичной поддержки.
+- `visibility`, default branch и URL GitHub Pages;
+- состояние community-функций;
+- ruleset основной ветки;
+- состояние Dependabot, CodeQL, secret scanning и push protection;
+- последний workflow run для каждого обязательного check;
+- соответствие release tag проверенному commit.
+
+Фактические настройки GitHub имеют приоритет над этим документом. Расхождение устраняется в том же
+административном изменении, которым была изменена конфигурация repository.

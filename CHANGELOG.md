@@ -10,7 +10,7 @@
 - публичный контур технической документации;
 - воспроизводимый локальный Compose для Rust backend;
 - GitHub Actions для Rust, iOS и документации;
-- Dependabot, security policy и read-only GitHub publication policy;
+- Dependabot, security policy и правила управления GitHub-репозиторием;
 - production Compose, генератор конфигурации и полный self-hosting runbook;
 - публикация unit-, UI- и headless E2E-тестов без runtime secrets.
 

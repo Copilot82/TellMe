@@ -23,12 +23,12 @@
 | [Стиль кода](code-style.md) | правила кода и комментариев | разработчик |
 | [ADR](adr/README.md) | принятые архитектурные решения | architect, reviewer |
 | [Стабилизация PiP](case-studies/pip-stabilization.md) | разбор диагностики на устройствах | iOS developer |
-| [Настройка GitHub](github-settings.md) | Pages, release, security и архивирование | владелец репозитория |
+| [Настройка GitHub](github-settings.md) | Pages, release, security и правила доступа | владелец репозитория |
 
 ## Правила актуализации
 
-При продолжении проекта во внутреннем fork документ обновляется в том же change set, что и
-изменение соответствующего contract. Минимальные связи:
+Документ обновляется в том же change set, что и изменение соответствующего contract. Минимальные
+связи:
 
 - новый endpoint → `api.md` и contract tests;
 - изменение plaintext/ciphertext boundary → `architecture.md` и `threat-model.md`;

@@ -12,9 +12,9 @@ attachments, and WebRTC audio/video calls. The backend routes public key materia
 it does not receive the private keys required to decrypt conversations.
 
 > [!IMPORTANT]
-> Development and maintenance have ended. Third-party pull requests, issues, integration requests,
-> and support requests are not processed. The repository is published as a completed engineering
-> reference and as a code base that an organization may maintain independently.
+> This repository is not operated as a public collaboration project. Third-party pull requests,
+> issues, integration requests, and support requests are not processed. The source code is provided
+> as a technical base for an organization-managed deployment.
 
 > [!CAUTION]
 > The cryptographic protocol has not undergone an independent audit. Do not use it for critical

@@ -70,7 +70,7 @@ sudo docker compose --env-file .env.production -f compose.production.yml exec -T
   "SELECT count(*) FROM schema_migrations;"'
 ```
 
-Для snapshot `2.0.0` ожидается не менее 16 применённых migrations. Дополнительно проверьте, что
+Для версии `2.0.0` ожидается не менее 16 применённых migrations. Дополнительно проверьте, что
 `server` log не содержит migration error или повторяющегося startup failure.
 
 ## 6. MinIO
