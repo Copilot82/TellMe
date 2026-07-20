@@ -10,3 +10,11 @@ condition = "AND"
 regexTarget = "line"
 paths = ['''(^|/)messenger/messenger/Core/Testing/AppLaunchConfiguration\.swift$''']
 regexes = ['''signedPrekeyPub:\s*"signed-prekey-pub-[0-9]+"''']
+
+[[allowlists]]
+description = "Public RFC 6455 WebSocket handshake nonce used in deployment probes"
+targetRules = ["generic-api-key"]
+condition = "AND"
+regexTarget = "line"
+paths = ['''(^|/)docs/deployment(-verification)?\.md$''']
+regexes = ['''Sec-WebSocket-Key:\s*dGhlIHNhbXBsZSBub25jZQ==''']
